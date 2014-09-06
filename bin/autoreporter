@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+
+require_relative "../lib/autoreporter"
+
+if ARGV.empty?
+  STDERR.puts "Usage: #{$0} [command you want to run repeatedly]"
+  exit 1
+end
+
+ar = Autoreporter.new(ARGV)
+ar.run!
