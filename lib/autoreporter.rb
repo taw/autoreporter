@@ -11,13 +11,18 @@ class Autoreporter
     @output, status = Open3.capture2e(@command.shelljoin)
   end
 
+  def clear_terminal!
+    # system("clear") doesn't clear scrollback buffer on iTerm2, we need to do this:
+    puts "\e[H\e[J\e[3J"
+  end
+
   def display_result!
-    print "\e[2J\e[f" # clear screen
+    clear_terminal!
     puts @output
   end
 
   def wait_for_condition!
-    sleep 15
+    sleep 60
   end
 
   def run!
