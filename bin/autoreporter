@@ -1,11 +1,23 @@
 #!/usr/bin/env ruby
 
+require "trollop"
 require_relative "../lib/autoreporter"
 
-if ARGV.empty?
-  STDERR.puts "Usage: #{$0} [command you want to run repeatedly]"
+opts = Trollop::options do
+  opt :delay, "delay between autorefleshes", type: :integer, default: 60
+  opt :cmd, "Command to run", type: :string, multi: true
+  opt :verbose, "verbose mode", default: false
+end
+
+opts[:cmd] << ARGV.shelljoin unless ARGV.empty?
+
+if opts[:cmd].empty?
+  STDERR.puts "You must specify at least one command to run"
   exit 1
 end
 
-ar = Autoreporter.new(ARGV)
+ar = Autoreporter.new
+ar.commands = opts[:cmd]
+ar.delay = opts[:delay]
+ar.verbose = opts[:verbose]
 ar.run!
