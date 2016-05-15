@@ -29,7 +29,7 @@ class Autoreporter
 
   def display_result!
     clear_terminal!
-    puts @output
+    puts *@output
   end
 
   def wait_for_condition!
