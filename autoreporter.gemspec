@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name         = "autoreporter"
-  s.version      = "0.0.20160509.2"
-  s.date         = "2016-05-09"
+  s.version      = "0.0.20160518"
+  s.date         = "2016-05-18"
   s.summary      = "Command line report runner"
   s.authors      = ["Tomasz Wegrzanowski"]
   s.email        = 'Tomasz.Wegrzanowski@gmail.com'
