@@ -24,7 +24,7 @@ class Autoreporter
 
   def clear_terminal!
     # system("clear") doesn't clear scrollback buffer on iTerm2, we need to do this:
-    puts "\e[H\e[J\e[3J"
+    print "\e[H\e[J\e[3J"
   end
 
   def display_result!
