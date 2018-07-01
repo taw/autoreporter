@@ -12,6 +12,7 @@ describe "autoreporter" do
     ar.verbose = verbose
     allow(ar).to receive(:sleep) {|*x| events << [:sleep, *x] }
     allow(ar).to receive(:puts) {|*x| events << [:puts, *x] }
+    allow(ar).to receive(:print) {|*x| events << [:print, *x] }
     ar
   end
 
@@ -24,7 +25,7 @@ describe "autoreporter" do
     it do
       thr = Thread.new{ ar.run! }
       expect(6.times.map{events.deq}).to eq([
-        [:puts, "\e[H\e[J\e[3J"],
+        [:print, "\e[H\e[J\e[3J"],
         [:puts, "foo\n", "4\n"],
         [:sleep, 15],
       ] * 2)
@@ -37,7 +38,7 @@ describe "autoreporter" do
     it do
       thr = Thread.new{ ar.run! }
       expect(6.times.map{events.deq}).to eq([
-        [:puts, "\e[H\e[J\e[3J"],
+        [:print, "\e[H\e[J\e[3J"],
         [:puts, "Running: echo foo\nfoo\n", "Running: echo $[2+2]\n4\n"],
         [:sleep, 15],
       ] * 2)
