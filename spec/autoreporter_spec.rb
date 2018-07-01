@@ -1,7 +1,7 @@
 require_relative "../lib/autoreporter"
 
 describe "autoreporter" do
-  let(:commands) { ["echo foo", "echo $[2+2]"] }
+  let(:commands) { ["echo foo", "echo $hello"] }
   let(:delay) { 15 }
 
   let(:events) { [] }
@@ -28,12 +28,16 @@ describe "autoreporter" do
     events
   end
 
+  before do
+    ENV["hello"] = "world"
+  end
+
   context "no verbose" do
     let(:verbose) { false }
     it do
       expect(events_received).to eq([
         [:print, "\e[H\e[J\e[3J"],
-        [:puts, "foo\n", "4\n"],
+        [:puts, "foo\n", "world\n"],
         [:sleep, 15],
      ] * 2)
     end
@@ -44,7 +48,7 @@ describe "autoreporter" do
     it do
       expect(events_received).to eq([
         [:print, "\e[H\e[J\e[3J"],
-        [:puts, "Running: echo foo\nfoo\n", "Running: echo $[2+2]\n4\n"],
+        [:puts, "Running: echo foo\nfoo\n", "Running: echo $hello\nworld\n"],
         [:sleep, 15],
       ] * 2)
     end
