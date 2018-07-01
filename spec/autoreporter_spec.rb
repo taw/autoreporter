@@ -1,48 +1,52 @@
 require_relative "../lib/autoreporter"
-require "thread"
 
 describe "autoreporter" do
   let(:commands) { ["echo foo", "echo $[2+2]"] }
   let(:delay) { 15 }
-  let(:events) { SizedQueue.new(10) }
+
+  let(:events) { [] }
+  let(:max_events) { 6 }
+  let(:got_event) { proc{|*ev|
+    events << ev
+    throw :done if events.size >= max_events
+  } }
+
   let(:ar) do
     ar = Autoreporter.new
     ar.commands = commands
     ar.delay = delay
     ar.verbose = verbose
-    allow(ar).to receive(:sleep) {|*x| events << [:sleep, *x] }
-    allow(ar).to receive(:puts) {|*x| events << [:puts, *x] }
-    allow(ar).to receive(:print) {|*x| events << [:print, *x] }
+    allow(ar).to receive(:sleep) {|*x| got_event[:sleep, *x] }
+    allow(ar).to receive(:puts) {|*x| got_event[:puts, *x] }
+    allow(ar).to receive(:print) {|*x| got_event[:print, *x] }
     ar
   end
 
-  before :each do
+  let(:events_received) do
     ar
+    catch(:done) { ar.call }
+    events
   end
 
   context "no verbose" do
     let(:verbose) { false }
     it do
-      thr = Thread.new{ ar.run! }
-      expect(6.times.map{events.deq}).to eq([
+      expect(events_received).to eq([
         [:print, "\e[H\e[J\e[3J"],
         [:puts, "foo\n", "4\n"],
         [:sleep, 15],
-      ] * 2)
-      thr.kill
+     ] * 2)
     end
   end
 
   context "verbose" do
     let(:verbose) { true }
     it do
-      thr = Thread.new{ ar.run! }
-      expect(6.times.map{events.deq}).to eq([
+      expect(events_received).to eq([
         [:print, "\e[H\e[J\e[3J"],
         [:puts, "Running: echo foo\nfoo\n", "Running: echo $[2+2]\n4\n"],
         [:sleep, 15],
       ] * 2)
-      thr.kill
     end
   end
 end

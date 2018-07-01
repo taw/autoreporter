@@ -36,7 +36,7 @@ class Autoreporter
     sleep @delay
   end
 
-  def run!
+  def call
     while true
       run_commands!
       display_result!

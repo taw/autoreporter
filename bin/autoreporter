@@ -20,4 +20,4 @@ ar = Autoreporter.new
 ar.commands = opts[:cmd]
 ar.delay = opts[:delay]
 ar.verbose = opts[:verbose]
-ar.run!
+ar.call
