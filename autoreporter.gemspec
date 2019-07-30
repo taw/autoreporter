@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name         = "autoreporter"
-  s.version      = "0.0.20190730"
+  s.version      = "0.0.20190730.1"
   s.date         = "2019-07-30"
   s.summary      = "Command line report runner"
   s.authors      = ["Tomasz Wegrzanowski"]

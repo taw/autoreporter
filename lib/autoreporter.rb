@@ -36,8 +36,11 @@ class Autoreporter
   # Wait for either @delay seconds
   # or for user forcing autorefresh by pressing enter
   def wait_for_condition!
-    Timeout.timeout(@delay) do
-      STDIN.readline
+    begin
+      Timeout.timeout(@delay) do
+        STDIN.readline
+      end
+    rescue Timeout::Error
     end
   end
 
