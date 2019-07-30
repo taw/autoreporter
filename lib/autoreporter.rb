@@ -1,5 +1,6 @@
 require "open3"
 require "shellwords"
+require "timeout"
 
 class Autoreporter
   attr_accessor :delay, :commands, :verbose
@@ -32,8 +33,12 @@ class Autoreporter
     puts *@output
   end
 
+  # Wait for either @delay seconds
+  # or for user forcing autorefresh by pressing enter
   def wait_for_condition!
-    sleep @delay
+    Timeout.timeout(@delay) do
+      STDIN.readline
+    end
   end
 
   def call

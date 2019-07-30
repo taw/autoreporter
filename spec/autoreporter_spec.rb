@@ -16,7 +16,7 @@ describe "autoreporter" do
     ar.commands = commands
     ar.delay = delay
     ar.verbose = verbose
-    allow(ar).to receive(:sleep) {|*x| got_event[:sleep, *x] }
+    allow(Timeout).to receive(:timeout) {|*x| got_event[:sleep, *x] }
     allow(ar).to receive(:puts) {|*x| got_event[:puts, *x] }
     allow(ar).to receive(:print) {|*x| got_event[:print, *x] }
     ar
