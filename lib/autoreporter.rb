@@ -50,5 +50,8 @@ class Autoreporter
       display_result!
       wait_for_condition!
     end
+  rescue Interrupt
+    # Allow clean exit for Ctrl-C
+    return
   end
 end
