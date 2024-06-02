@@ -7,6 +7,7 @@ opts = Optimist::options do
   opt :delay, "delay between autorefleshes", type: :integer, default: 60
   opt :cmd, "Command to run", type: :string, multi: true
   opt :verbose, "verbose mode", default: false
+  opt :file, "Also save to file", type: :string
 end
 
 opts[:cmd] << ARGV.shelljoin unless ARGV.empty?
@@ -20,4 +21,5 @@ ar = Autoreporter.new
 ar.commands = opts[:cmd]
 ar.delay = opts[:delay]
 ar.verbose = opts[:verbose]
+ar.file = opts[:file]
 ar.call

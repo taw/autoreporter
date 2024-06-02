@@ -3,13 +3,14 @@ require "shellwords"
 require "timeout"
 
 class Autoreporter
-  attr_accessor :delay, :commands, :verbose
+  attr_accessor :delay, :commands, :verbose, :file
 
   def initialize
     @output = nil
     @delay = 60
     @verbose = false
     @commands = []
+    @file = nil
   end
 
   def run_command(cmd)
@@ -31,6 +32,11 @@ class Autoreporter
   def display_result!
     clear_terminal!
     puts *@output
+    if @file
+      open(@file, "w") do |f|
+        f.puts *@output
+      end
+    end
   end
 
   # Wait for either @delay seconds
