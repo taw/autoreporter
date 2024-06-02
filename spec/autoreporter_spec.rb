@@ -5,6 +5,7 @@ describe "autoreporter" do
   let(:commands) { ["echo foo", "echo $hello"] }
   let(:delay) { 15 }
   let(:file) { nil }
+  let(:verbose) { false }
 
   let(:events) { [] }
   let(:max_events) { 6 }
@@ -37,7 +38,6 @@ describe "autoreporter" do
   end
 
   context "no verbose" do
-    let(:verbose) { false }
     it do
       expect(events_received).to eq([
         [:print, clear_terminal],
@@ -59,7 +59,6 @@ describe "autoreporter" do
   end
 
   context "file" do
-    let(:verbose) { false }
     let(:file) { Tempfile.new("output") }
     it do
       expect(events_received).to eq([
@@ -68,6 +67,19 @@ describe "autoreporter" do
         [:sleep, 15],
       ] * 2)
       expect(File.read(file.path)).to eq("foo\nworld\n")
+    end
+  end
+
+  context "file with ANSI colors" do
+    let(:file) { Tempfile.new("output") }
+    let(:commands) { ['printf "\e[31mR\e[33ma\e[32mi\e[34mn\e[35mb\e[36mo\e[37mw\e[0m\n"'] }
+    it do
+      expect(events_received).to eq([
+        [:print, clear_terminal],
+        [:puts, "\e[31mR\e[33ma\e[32mi\e[34mn\e[35mb\e[36mo\e[37mw\e[0m\n"],
+        [:sleep, 15],
+      ] * 2)
+      expect(File.read(file.path)).to eq("Rainbow\n")
     end
   end
 end

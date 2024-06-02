@@ -1,6 +1,7 @@
 require "open3"
 require "shellwords"
 require "timeout"
+require "strings-ansi"
 
 class Autoreporter
   attr_accessor :delay, :commands, :verbose, :file
@@ -34,7 +35,7 @@ class Autoreporter
     puts *@output
     if @file
       open(@file, "w") do |f|
-        f.puts *@output
+        f.puts *@output.map{|s| Strings::ANSI.sanitize(s)}
       end
     end
   end
